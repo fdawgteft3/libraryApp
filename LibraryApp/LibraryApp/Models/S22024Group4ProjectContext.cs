@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using LibraryApp.Models.ViewModel;
 
 namespace LibraryApp.Models;
 
@@ -31,10 +32,7 @@ public partial class S22024Group4ProjectContext : DbContext
 
     public virtual DbSet<Role> Roles { get; set; }
 
-    //We should get rid of this at some point
-//    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-//        => optionsBuilder.UseSqlServer("Server=citizen.manukautech.info,6304;Database=S22024_Group4_Project;UID=S22024_Group4;PWD=fBit$96986;encrypt=true;trustservercertificate=true");
+    public virtual DbSet<BookInventory> BookInventories { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -79,11 +77,11 @@ public partial class S22024Group4ProjectContext : DbContext
 
         modelBuilder.Entity<BookCopy>(entity =>
         {
-            entity.HasKey(e => e.Isbn);
+            entity.HasKey(e => e.ISBN);
 
             entity.ToTable("BookCopy");
 
-            entity.Property(e => e.Isbn)
+            entity.Property(e => e.ISBN)
                 .HasMaxLength(100)
                 .HasColumnName("ISBN");
             entity.Property(e => e.Edition).HasMaxLength(50);
@@ -163,4 +161,6 @@ public partial class S22024Group4ProjectContext : DbContext
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+
+public DbSet<LibraryApp.Models.ViewModel.BookInventory> BookInventory { get; set; } = default!;
 }

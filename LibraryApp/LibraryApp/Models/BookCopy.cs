@@ -6,7 +6,7 @@ namespace LibraryApp.Models;
 
 public partial class BookCopy
 {
-    public string Isbn { get; set; } = null!;
+    public string ISBN { get; set; } = null!;
     [Display(Name = "Book ID")]
     public int BookId { get; set; }
 

@@ -9,8 +9,7 @@ public partial class Book
     [Key]
     [Display(Name = "Book ID")]
     public int BookId { get; set; }
-    [Display(Name = "Author ID")]
-    public int AuthorId { get; set; }
+    
     [Display(Name = "Category ID")]
     public int CategoryId { get; set; }
 
