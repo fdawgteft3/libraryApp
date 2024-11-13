@@ -1,108 +1,100 @@
-﻿@model IEnumerable<LibraryApp.Models.Category>
-
+﻿@model IEnumerable<LibraryApp.Models.ViewModel.CategoryBookAuthors>
 
 @{
     ViewData["Title"] = "Index";
 }
- 
+
 <h1>Books</h1>
- 
+
 <p>
     <a asp-action="Create">Create New </a>
 </p>
 
 <!-- Tabs for each Category and All Products -->
 <ul class="nav nav-tabs" id="categoryTabs" role="tablist">
-<!-- All Products Tab -->
-<li class="nav-item" role="presentation">
-<button class="nav-link @(Model.FirstOrDefault()?.CategoryId == null ? "active" : "")" id="tab-all-products" data-bs-toggle="tab" data-bs-target="#all-products" type="button" role="tab" aria-controls="all-products" aria-selected="@(Model.FirstOrDefault()?.CategoryId == null ? "true" : "false")">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link @(Model.FirstOrDefault()?.Category.CategoryId == null ? "active" : "")" id="tab-all-products" data-bs-toggle="tab" data-bs-target="#all-products" type="button" role="tab" aria-controls="all-products" aria-selected="@(Model.FirstOrDefault()?.Category.CategoryId == null ? "true" : "false")">
             All Products
-</button>
-</li>
- 
-    <!-- Category Tabs -->
-    @foreach (var category in Model)
+        </button>
+    </li>
+
+    @foreach (var categoryItem in Model)
     {
-<li class="nav-item" role="presentation">
-<button class="nav-link @(category.CategoryId == Model.First().CategoryId ? "active" : "")" id="tab-@category.CategoryId" data-bs-toggle="tab" data-bs-target="#category-@category.CategoryId" type="button" role="tab" aria-controls="category-@category.CategoryId" aria-selected="@(category.CategoryId == Model.First().CategoryId ? "true" : "false")">
-                @category.CategoryName
-</button>
-</li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link @(categoryItem.Category.CategoryId == Model.First().Category.CategoryId ? "active" : "")" id="tab-@categoryItem.Category.CategoryId" data-bs-toggle="tab" data-bs-target="#category-@categoryItem.Category.CategoryId" type="button" role="tab" aria-controls="category-@categoryItem.Category.CategoryId" aria-selected="@(categoryItem.Category.CategoryId == Model.First().Category.CategoryId ? "true" : "false")">
+                @categoryItem.Category.CategoryName
+            </button>
+        </li>
     }
 </ul>
- 
-<!-- Tab content for All Products and Each Category -->
+
 <div class="tab-content" id="categoryTabsContent">
-<!-- All Products Tab Content -->
-<div class="tab-pane fade @(Model.FirstOrDefault()?.CategoryId == null ? "show active" : "")" id="all-products" role="tabpanel" aria-labelledby="tab-all-products">
-<div class="row mt-3">
+    <div class="tab-pane fade @(Model.FirstOrDefault()?.Category.CategoryId == null ? "show active" : "")" id="all-products" role="tabpanel" aria-labelledby="tab-all-products">
+        <div class="row mt-3">
             @if (Model.SelectMany(c => c.Books).Any())
             {
-                @foreach (var book in Model.SelectMany(c => c.Books))
+                @foreach (var bookItem in Model.SelectMany(c => c.Books))
                 {
-<div class="col-md-4 mb-4">
-<div class="card h-100">
-<div class="card-body">
-<h5 class="card-title">@book.Title</h5>
-<p class="card-text">@book.Description</p>
-@* <p class="card-text">
-<strong>Price:</strong> $@product.Price<br />
-<strong>Color:</strong> @product.Color <br />
-<strong>Stock:</strong> @product.Stock
-</p> *@
-</div>
-<div class="card-footer">
-<!-- Action Buttons -->
-
-                                @* <a asp-controller="ShoppingCart" asp-action="AddToCart" asp-route-id="@product.Id" class="btn btn-primary btn-sm">Add To Cart</a> *@
-<!-- Add to Cart button - disabled if stock is zero -->
-                              
-</div>
-</div>
-</div>
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">@bookItem.Book.Title</h5>
+                                <p class="card-text">@bookItem.Book.Description</p>
+                                    Authors:
+                                    @foreach (var author in bookItem.Authors)
+                                    {
+                                    <p>@author.FirstName @author.LastName</p>
+                                    }
+                            </div>
+                            <div class="card-footer">
+                                <!-- Action Buttons -->
+                                <a asp-controller="Book" asp-action="Edit" asp-route-id="@bookItem.Book.BookId" class="btn btn-primary btn-sm">Edit</a>
+                            </div>
+                        </div>
+                    </div>
                 }
             }
             else
             {
-<p class="text-muted">No products available.</p>
+                <p class="text-muted">No books available.</p>
             }
-</div>
-</div>
- 
-    <!-- Tab Content for Each Category -->
-    @foreach (var category in Model)
-    {
-<div class="tab-pane fade @(category.CategoryId == Model.First().CategoryId ? "show active" : "")" id="category-@category.CategoryId" role="tabpanel" aria-labelledby="tab-@category.CategoryId">
-<div class="row mt-3">
-                @if (category.Books.Any())
-                {
-                    @foreach (var book in category.Books)
-                    {
-<div class="col-md-4 mb-4">
-<div class="card h-100">
-<div class="card-body">
-<h5 class="card-title">@book.Title</h5>
-<p class="card-text">@book.Description</p>
-@* <p class="card-text">
-<strong>Price:</strong> $@product.Price<br />
-<strong>Color:</strong> @product.Color <br />
-<strong>Stock:</strong> @product.Stock
-</p> *@
-</div>
-<div class="card-footer">
-<!-- Action Buttons -->
+        </div>
+    </div>
 
-     
-</div>
-</div>
-</div>
+    @foreach (var categoryItem in Model)
+    {
+        <div class="tab-pane fade @(categoryItem.Category.CategoryId == Model.First().Category.CategoryId ? "show active" : "")" id="category-@categoryItem.Category.CategoryId" role="tabpanel" aria-labelledby="tab-@categoryItem.Category.CategoryId">
+            <div class="row mt-3">
+                @if (categoryItem.Books.Any())
+                {
+                    @foreach (var bookItem in categoryItem.Books)
+                    {
+                        <div class="col-md-4 mb-4">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title">@bookItem.Book.Title</h5>
+                                    <p class="card-text">@bookItem.Book.Description</p>
+                                    <ul>
+                                        Authors:
+                                        @foreach (var author in bookItem.Authors)
+                                        {
+                                            <p>@author.FirstName @author.LastName</p>
+                                        }
+                                    </ul>
+                                </div>
+                                <div class="card-footer">
+                                    <!-- Action Buttons -->
+                                    <a asp-controller="Book" asp-action="Edit" asp-route-id="@bookItem.Book.BookId" class="btn btn-primary btn-sm">Edit</a>
+                                </div>
+                            </div>
+                        </div>
                     }
                 }
                 else
                 {
-<p class="text-muted">No products available in this category.</p>
+                    <p class="text-muted">No books available in this category.</p>
                 }
-</div>
-</div>
+            </div>
+        </div>
     }
 </div>

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using LibraryApp.Models;
+using LibraryApp.Models.ViewModel;
 
 namespace LibraryApp.Controllers
 {
@@ -21,9 +22,25 @@ namespace LibraryApp.Controllers
         // GET: Book
         public async Task<IActionResult> Index()
         {
-            var categories = _context.Categories.Include(b => b.Books).ToList();
-            return View(categories);
+            var categories = await _context.Categories.ToListAsync();
+            var books = await _context.Books.ToListAsync();
+            var bookAuthors = await _context.BookAuthors.Include(ba => ba.Author).ToListAsync();
+
+            var categoryData = categories.Select(c => new CategoryBookAuthors
+            {
+                Category = c,
+                Books = books.Where(b => b.CategoryId == c.CategoryId).Select(b => new BookAuthors
+                {
+                    Book = b,
+                    Authors = bookAuthors.Where(ba => ba.BookId == b.BookId).Select(ba => ba.Author).ToList()
+                }).ToList()
+            }).ToList();
+
+            return View(categoryData);
         }
+
+
+
 
         // GET: Book/Details/5
         public async Task<IActionResult> Details(int? id)
