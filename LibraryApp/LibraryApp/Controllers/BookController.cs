@@ -21,8 +21,8 @@ namespace LibraryApp.Controllers
         // GET: Book
         public async Task<IActionResult> Index()
         {
-            var s22024Group4ProjectContext = _context.Books.Include(b => b.Category);
-            return View(await s22024Group4ProjectContext.ToListAsync());
+            var categories = _context.Categories.Include(b => b.Books).ToList();
+            return View(categories);
         }
 
         // GET: Book/Details/5
