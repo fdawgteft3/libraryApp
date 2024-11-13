@@ -73,7 +73,7 @@ namespace LibraryApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("BookId,AuthorId,CategoryId,Title,Publisher,PublishYear,Description")] Book book)
+        public async Task<IActionResult> Create([Bind("BookId,CategoryId,Title,Publisher,PublishYear,Description")] Book book)
         {
             if (ModelState.IsValid)
             {
@@ -88,6 +88,7 @@ namespace LibraryApp.Controllers
         // GET: Book/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            var categories = await _context.Categories.ToListAsync();
             if (id == null)
             {
                 return NotFound();
@@ -98,7 +99,8 @@ namespace LibraryApp.Controllers
             {
                 return NotFound();
             }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryId", book.CategoryId);
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryName", book.CategoryId);
+
             return View(book);
         }
 
@@ -107,15 +109,17 @@ namespace LibraryApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("BookId,AuthorId,CategoryId,Title,Publisher,PublishYear,Description")] Book book)
+        public async Task<IActionResult> Edit(int id, [Bind("BookId,CategoryId,Title,Publisher,PublishYear,Description")] Book book)
         {
             if (id != book.BookId)
             {
                 return NotFound();
+                
             }
 
             if (ModelState.IsValid)
             {
+                Console.WriteLine("success");
                 try
                 {
                     _context.Update(book);
@@ -134,7 +138,15 @@ namespace LibraryApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryId", book.CategoryId);
+            else
+            {
+                var validationErrors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+                foreach (var error in validationErrors)
+                {
+                    Console.WriteLine($"Validation error: {error}");
+                }
+                }
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryName", book.CategoryId);
             return View(book);
         }
 

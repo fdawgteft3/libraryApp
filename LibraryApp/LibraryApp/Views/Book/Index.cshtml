@@ -14,7 +14,7 @@
 <ul class="nav nav-tabs" id="categoryTabs" role="tablist">
     <li class="nav-item" role="presentation">
         <button class="nav-link @(Model.FirstOrDefault()?.Category.CategoryId == null ? "active" : "")" id="tab-all-products" data-bs-toggle="tab" data-bs-target="#all-products" type="button" role="tab" aria-controls="all-products" aria-selected="@(Model.FirstOrDefault()?.Category.CategoryId == null ? "true" : "false")">
-            All Products
+            All Books
         </button>
     </li>
 
@@ -27,7 +27,7 @@
         </li>
     }
 </ul>
-
+@* All Books*@
 <div class="tab-content" id="categoryTabsContent">
     <div class="tab-pane fade @(Model.FirstOrDefault()?.Category.CategoryId == null ? "show active" : "")" id="all-products" role="tabpanel" aria-labelledby="tab-all-products">
         <div class="row mt-3">
@@ -39,16 +39,17 @@
                         <div class="card h-100">
                             <div class="card-body">
                                 <h5 class="card-title">@bookItem.Book.Title</h5>
-                                <p class="card-text">@bookItem.Book.Description</p>
-                                    Authors:
+                                @* <p class="card-text">@bookItem.Book.Description</p> *@
                                     @foreach (var author in bookItem.Authors)
                                     {
                                     <p>@author.FirstName @author.LastName</p>
                                     }
+                                <p class="card-text">@bookItem.Book.Category.CategoryName</p>
                             </div>
                             <div class="card-footer">
                                 <!-- Action Buttons -->
                                 <a asp-controller="Book" asp-action="Edit" asp-route-id="@bookItem.Book.BookId" class="btn btn-primary btn-sm">Edit</a>
+                                <a asp-controller="Book" asp-action="Details" asp-route-id="@bookItem.Book.BookId" class="btn btn-primary btn-sm">Details</a>
                             </div>
                         </div>
                     </div>
@@ -73,7 +74,6 @@
                             <div class="card h-100">
                                 <div class="card-body">
                                     <h5 class="card-title">@bookItem.Book.Title</h5>
-                                    <p class="card-text">@bookItem.Book.Description</p>
                                     <ul>
                                         Authors:
                                         @foreach (var author in bookItem.Authors)
@@ -85,6 +85,7 @@
                                 <div class="card-footer">
                                     <!-- Action Buttons -->
                                     <a asp-controller="Book" asp-action="Edit" asp-route-id="@bookItem.Book.BookId" class="btn btn-primary btn-sm">Edit</a>
+                                    <a asp-controller="Book" asp-action="Details" asp-route-id="@bookItem.Book.BookId" class="btn btn-primary btn-sm">Details</a>
                                 </div>
                             </div>
                         </div>

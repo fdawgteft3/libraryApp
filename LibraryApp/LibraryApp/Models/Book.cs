@@ -23,5 +23,5 @@ public partial class Book
     [Display(Name = "Book Copies")]
     public virtual ICollection<BookCopy> BookCopies { get; set; } = new List<BookCopy>();
 
-    public virtual Category Category { get; set; } = null!;
+    public virtual Category? Category { get; set; }
 }
