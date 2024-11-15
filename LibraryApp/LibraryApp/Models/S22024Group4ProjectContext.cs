@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using LibraryApp.Models.ViewModel;
+using LibraryApp.Data;
+using Microsoft.AspNetCore.Identity;
 
 namespace LibraryApp.Models;
 
@@ -15,6 +17,15 @@ public partial class S22024Group4ProjectContext : DbContext
         : base(options)
     {
     }
+
+    
+    
+
+    
+
+        
+
+    
 
     public virtual DbSet<Author> Authors { get; set; }
 
@@ -157,7 +168,58 @@ public partial class S22024Group4ProjectContext : DbContext
             entity.Property(e => e.RoleName).HasMaxLength(15);
         });
 
+
+        // Seed roles
+
+        modelBuilder.Entity<IdentityRole>().HasData(
+
+            new IdentityRole
+
+            {
+
+                Id = "1",
+
+                Name = "Administrator",
+
+                NormalizedName = "ADMINISTRATOR",
+
+                ConcurrencyStamp = Guid.NewGuid().ToString()
+
+            },
+
+            new IdentityRole
+
+            {
+
+                Id = "2",
+
+                Name = "Staff",
+
+                NormalizedName = "STAFF",
+
+                ConcurrencyStamp = Guid.NewGuid().ToString()
+
+            },
+
+            new IdentityRole
+
+            {
+
+                Id = "3",
+
+                Name = "Student",
+
+                NormalizedName = "STUDENT",
+
+                ConcurrencyStamp = Guid.NewGuid().ToString()
+
+            }
+
+
+
+        );
         OnModelCreatingPartial(modelBuilder);
+        //End
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);

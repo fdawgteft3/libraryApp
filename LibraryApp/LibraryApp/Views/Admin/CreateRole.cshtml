@@ -1,0 +1,30 @@
+﻿@model Microsoft.AspNetCore.Identity.IdentityRole
+
+<h2>Create new role</h2>
+
+<form asp-action="CreateRole" method="post">
+
+    <div class="form-group">
+        <label asp-for="Name" class="control-label">Role Name</label><br /><br />
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <br />
+    <button type="submit" class="btn btn-success">
+        <i class="fas fa-check"></i> Create
+    </button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+
+</form>
+
+@if (ViewData.ModelState?.IsValid == false)
+{
+    <div class="alert alert-danger mt-3">
+        <ul>
+            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+            {
+                <li>@error.ErrorMessage</li>
+            }
+        </ul>
+    </div>
+}
