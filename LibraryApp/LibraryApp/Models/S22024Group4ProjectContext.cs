@@ -72,7 +72,9 @@ public partial class S22024Group4ProjectContext : DbContext
         modelBuilder.Entity<BookAuthor>(entity =>
         {
             entity
-                .HasNoKey()
+                .HasKey(e => new { e.BookId, e.AuthorId }); // Set composite primary key
+
+            entity
                 .ToTable("BookAuthor");
 
             entity.HasOne(d => d.Author).WithMany()
@@ -85,6 +87,7 @@ public partial class S22024Group4ProjectContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_BookAuthor_Book");
         });
+
 
         modelBuilder.Entity<BookCopy>(entity =>
         {

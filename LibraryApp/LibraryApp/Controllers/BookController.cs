@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using LibraryApp.Models;
 using LibraryApp.Models.ViewModel;
+using Newtonsoft.Json;
 
 namespace LibraryApp.Controllers
 {
@@ -39,7 +40,15 @@ namespace LibraryApp.Controllers
             return View(categoryData);
         }
 
+        public string IndexAjax(string searchString)
+        {
 
+            string sql = "select * from Author where FirstName like @p0";
+            string wrapString = "%" + searchString + "%";
+            List<Author> authors = _context.Authors.FromSqlRaw(sql, wrapString).ToList();
+            string json = JsonConvert.SerializeObject(authors);
+            return json;
+        }
 
 
         // GET: Book/Details/5
@@ -89,6 +98,7 @@ namespace LibraryApp.Controllers
         public async Task<IActionResult> Edit(int? id)
         {
             var categories = await _context.Categories.ToListAsync();
+            
             if (id == null)
             {
                 return NotFound();
@@ -99,9 +109,18 @@ namespace LibraryApp.Controllers
             {
                 return NotFound();
             }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryName", book.CategoryId);
+            //Get authors list
+            var bookAuthors = await _context.BookAuthors.Where(ba => ba.BookId == id).Select(ba => ba.Author).ToListAsync();
 
-            return View(book);
+            var bookAuthorModel = new BookAuthors
+            {
+                Book = book,
+                Authors = bookAuthors
+            };
+
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryName", book.CategoryId);
+            
+            return View(bookAuthorModel);
         }
 
         // POST: Book/Edit/5
@@ -116,13 +135,44 @@ namespace LibraryApp.Controllers
                 return NotFound();
                 
             }
+            
+
+            
 
             if (ModelState.IsValid)
             {
-                Console.WriteLine("success");
-                try
+                //Get authors list
+                var bookAuthors = await _context.BookAuthors.Where(ba => ba.BookId == id).ToListAsync();
+                //Print all form keys for testing
+                foreach (var key in HttpContext.Request.Form.Keys)
+                {
+                    Console.WriteLine($"Form Key: {key}, Value: {HttpContext.Request.Form[key]}");
+                }
+                    try
                 {
                     _context.Update(book);
+                    foreach (var key in HttpContext.Request.Form.Keys)
+                    {
+                        Console.WriteLine($"Form Key: {key}, Value: {HttpContext.Request.Form[key]}");
+                    }
+                    //Find and delete author list
+                    var previousAuthors = _context.BookAuthors.Where(ba => ba.BookId == id);
+                    _context.BookAuthors.RemoveRange(previousAuthors);
+
+                    var rawSelectedAuthors = HttpContext.Request.Form["authorList"];
+                    var selectedAuthors = rawSelectedAuthors.Where(a => !string.IsNullOrEmpty(a)).ToList();
+                    foreach (var authorId in selectedAuthors)
+                    {
+                        Console.WriteLine($"AuthorId: {authorId}");
+                        int authorIdInt = int.Parse(authorId);
+
+                        _context.BookAuthors.Add(new BookAuthor
+                        {
+                            BookId = id,
+                            AuthorId = authorIdInt
+                        });
+                    }
+
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
