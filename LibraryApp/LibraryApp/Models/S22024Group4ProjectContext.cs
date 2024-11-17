@@ -18,15 +18,6 @@ public partial class S22024Group4ProjectContext : DbContext
     {
     }
 
-    
-    
-
-    
-
-        
-
-    
-
     public virtual DbSet<Author> Authors { get; set; }
 
     public virtual DbSet<Book> Books { get; set; }

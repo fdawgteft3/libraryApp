@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using LibraryApp.Models;
 using LibraryApp.Models.ViewModel;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Authorization;
 
 namespace LibraryApp.Controllers
 {
@@ -19,7 +20,7 @@ namespace LibraryApp.Controllers
         {
             _context = context;
         }
-
+        [Authorize]
         // GET: Book
         public async Task<IActionResult> Index()
         {

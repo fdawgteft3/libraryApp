@@ -26,7 +26,7 @@ namespace LibraryApp.Controllers
         {
             return View(await _context.BookInventories.ToListAsync());
         }
-        [Authorize(Roles = "Student, Admin")]
+        [Authorize]
         public IActionResult getInventory()
         {
             string sql = @"SELECT 
