@@ -1,0 +1,26 @@
+﻿@{
+    ViewData["Title"] = "Add Student Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Add Student</h1>
+
+
+    @model LibraryApp.Models.StudentUser
+
+    <form asp-controller="Student" asp-action="addStudentData" method="post">
+
+        <label>Email</label>
+        <input class="form-control" type="text" placeholder="Enter" asp-for="Email" />
+
+        <label class="mt-4">First Name</label>
+        <input class="form-control" type="text" placeholder="Enter" asp-for="FirstName" />
+
+        <label class="mt-4">Last Name</label>
+        <input class="form-control" type="text" placeholder="Enter " asp-for="LastName" />
+
+        <button class="btn btn-primary mt-4" type="submit">ADD</button>
+
+    </form>
+
+</div>

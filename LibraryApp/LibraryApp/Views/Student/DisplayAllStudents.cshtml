@@ -1,0 +1,36 @@
+﻿@{
+    ViewData["Title"] = "View Student Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">View Student</h1>
+
+
+    @model IEnumerable<LibraryApp.Models.StudentUser>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var s in Model)
+            {
+                <tr>
+                    <td>@s.FirstName</td>
+                    <td>@s.LastName</td>
+                    <td>@s.Email</td>
+                    <td>
+                        <a asp-action="updateStudentData" asp-route-id="@s.UserId">Update</a>
+                        <a asp-action="DeleteStudent" asp-route-id="@s.Email">Delete</a>
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>

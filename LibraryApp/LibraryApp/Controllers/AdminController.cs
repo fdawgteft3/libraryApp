@@ -240,7 +240,11 @@ namespace LibraryApp.Controllers
                 ModelState.AddModelError("", "No role selected");
                 return View(model);
             }
-
+            //Redirect to AddStudent View if student selected
+            if(model.SelectedRoleIds.Contains("Student")||model.SelectedRoleIds.Contains("student"))
+            {
+                return RedirectToAction("AddStudent","Student");
+            }
             var addResult = await _userManager.AddToRolesAsync(user, model.SelectedRoleIds);
 
             if (addResult.Succeeded)
