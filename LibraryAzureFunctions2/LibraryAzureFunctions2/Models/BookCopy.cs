@@ -7,7 +7,7 @@ namespace LibraryAzureFunctions2.Models
     {
         public BookCopy()
         {
-            BorrowRecords = new HashSet<BorrowRecord>();
+            Borrow_Records = new HashSet<Borrow_Record>();
         }
 
         public string Isbn { get; set; }
@@ -17,6 +17,6 @@ namespace LibraryAzureFunctions2.Models
         public bool IsActive { get; set; }
 
         public virtual Book Book { get; set; }
-        public virtual ICollection<BorrowRecord> BorrowRecords { get; set; }
+        public virtual ICollection<Borrow_Record> Borrow_Records { get; set; }
     }
 }

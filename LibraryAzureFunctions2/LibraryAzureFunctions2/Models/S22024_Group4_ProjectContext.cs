@@ -25,10 +25,9 @@ namespace LibraryAzureFunctions2.Models
         public virtual DbSet<Author> Authors { get; set; }
         public virtual DbSet<Book> Books { get; set; }
         public virtual DbSet<BookCopy> BookCopies { get; set; }
-        public virtual DbSet<BorrowRecord> BorrowRecords { get; set; }
         public virtual DbSet<Category> Categories { get; set; }
-        public virtual DbSet<Person> People { get; set; }
-        public virtual DbSet<Role> Roles { get; set; }
+        public virtual DbSet<Borrow_Record> Borrow_Records { get; set; }
+        public virtual DbSet<StudentUsers> StudentUserss { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -148,6 +147,20 @@ namespace LibraryAzureFunctions2.Models
                     .IsRequired()
                     .HasMaxLength(20);
             });
+            modelBuilder.Entity<StudentUsers>(entity =>
+            {
+                entity.ToTable("StudentUsers");
+                entity.HasKey(e => e.UserId);
+                entity.Property(e => e.FirstName)
+                    .IsRequired()
+                    .HasMaxLength(256);
+
+                entity.Property(e => e.LastName)
+                    .IsRequired()
+                    .HasMaxLength(256);
+                entity.Property(e => e.Email).HasMaxLength(256);
+                entity.Property(e => e.Password).HasMaxLength(256);
+            });
 
             modelBuilder.Entity<Book>(entity =>
             {
@@ -206,42 +219,7 @@ namespace LibraryAzureFunctions2.Models
                     .HasConstraintName("FK_BookCopy_Book");
             });
 
-            modelBuilder.Entity<BorrowRecord>(entity =>
-            {
-                entity.HasKey(e => e.RecordNumber)
-                    .HasName("PK_BorrowRecordss");
-
-                entity.ToTable("BorrowRecord");
-
-                entity.Property(e => e.AmountPaid).HasColumnType("money");
-
-                entity.Property(e => e.DateBorrowed).HasColumnType("datetime");
-
-                entity.Property(e => e.DateReturned).HasColumnType("datetime");
-
-                entity.Property(e => e.DueDate).HasColumnType("datetime");
-
-                entity.Property(e => e.Isbn)
-                    .IsRequired()
-                    .HasMaxLength(100)
-                    .HasColumnName("ISBN");
-
-                entity.Property(e => e.LateFee).HasColumnType("money");
-
-                entity.Property(e => e.OustandingFee).HasColumnType("money");
-
-                entity.HasOne(d => d.IsbnNavigation)
-                    .WithMany(p => p.BorrowRecords)
-                    .HasForeignKey(d => d.Isbn)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_BorrowRecord_BookCopy");
-
-                entity.HasOne(d => d.Member)
-                    .WithMany(p => p.BorrowRecords)
-                    .HasForeignKey(d => d.MemberId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_BorrowRecord_Person");
-            });
+           
 
             modelBuilder.Entity<Category>(entity =>
             {
@@ -254,52 +232,37 @@ namespace LibraryAzureFunctions2.Models
                     .HasMaxLength(50);
             });
 
-            modelBuilder.Entity<Person>(entity =>
+            
+            modelBuilder.Entity<Borrow_Record>(entity =>
             {
-                entity.HasKey(e => e.MemberId);
+                entity.HasKey(e => e.RecordNumber);
 
-                entity.ToTable("Person");
+                entity.ToTable("Borrow_Record");
 
-                entity.Property(e => e.Email)
-                    .IsRequired()
-                    .HasMaxLength(100);
+                entity.Property(e => e.AmountPaid).HasColumnType("money");
 
-                entity.Property(e => e.Password)
-                    .IsRequired()
-                    .HasMaxLength(15);
+                entity.Property(e => e.DateBorrowed).HasColumnType("datetime");
 
-                entity.Property(e => e.PfirstName)
-                    .IsRequired()
-                    .HasMaxLength(20)
-                    .HasColumnName("PFirstName");
+                entity.Property(e => e.DueDate).HasColumnType("datetime");
 
-                entity.Property(e => e.Phone)
-                    .IsRequired()
-                    .HasMaxLength(15);
-
-                entity.Property(e => e.PlastName)
-                    .IsRequired()
-                    .HasMaxLength(20)
-                    .HasColumnName("PLastName");
-
-                entity.Property(e => e.Username)
-                    .IsRequired()
-                    .HasMaxLength(15);
-
-                entity.HasOne(d => d.Role)
-                    .WithMany(p => p.People)
-                    .HasForeignKey(d => d.RoleId)
+                entity.HasOne(d => d.Copy)
+                    .WithMany(p => p.Borrow_Records)
+                    .HasForeignKey(d => d.Isbn)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Person_Role");
-            });
+                    .HasConstraintName("FK_Borrow_Record_BookCopy");
 
-            modelBuilder.Entity<Role>(entity =>
-            {
-                entity.ToTable("Role");
+                entity.Property(e => e.LateFee).HasColumnType("money");
 
-                entity.Property(e => e.RoleName)
-                    .IsRequired()
-                    .HasMaxLength(15);
+                entity.Property(e => e.OutstandingFee).HasColumnType("money");
+
+                entity.Property(e => e.ReturnedDate).HasColumnType("datetime");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.Borrow_Records)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Borrow_Record_StudentUsers");
+
             });
 
             OnModelCreatingPartial(modelBuilder);

@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using LibraryAzureFunctions2.Models;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace LibraryAzureFunctions2
 {
@@ -92,7 +93,7 @@ namespace LibraryAzureFunctions2
 
             using (S22024_Group4_ProjectContext ctx = new S22024_Group4_ProjectContext())
             {
-                BorrowRecord br = ctx.BorrowRecords.Where(b => b.RecordNumber == recordNumber).FirstOrDefault();
+                Borrow_Record br = ctx.Borrow_Records.Where(b => b.RecordNumber == recordNumber).FirstOrDefault();
                 br.IsActive = false;
                 ctx.SaveChanges();
 
@@ -113,7 +114,7 @@ namespace LibraryAzureFunctions2
 
             using (S22024_Group4_ProjectContext ctx = new S22024_Group4_ProjectContext())
             {
-                BorrowRecord br = ctx.BorrowRecords.FirstOrDefault(b => b.RecordNumber == recordNumber);
+                Borrow_Record br = ctx.Borrow_Records.FirstOrDefault(b => b.RecordNumber == recordNumber);
                 if (br == null)
                 {
                     return new NotFoundObjectResult("Borrow record not found");
@@ -127,7 +128,7 @@ namespace LibraryAzureFunctions2
                 }
 
                 // Update record with the calculated fees
-                br.OustandingFee = outstandingFee - amountPaid;
+                br.OutstandingFee = outstandingFee - amountPaid;
 
                 //Save changes
                 ctx.SaveChanges();
@@ -188,5 +189,93 @@ namespace LibraryAzureFunctions2
 
 
         }
+        [FunctionName("AddBorrowRecord")]
+        public IActionResult abr([HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequest req)
+        {
+            _logger.LogInformation("C# HTTP trigger function processed a request.");
+            string isbn = req.Query["ISBN"];
+            string email = req.Query["Email"];
+            DateTime dueDate = DateTime.Parse(req.Query["DueDate"]);
+            decimal lateFee = decimal.Parse(req.Query["LateFee"]);
+
+            using (S22024_Group4_ProjectContext ctx = new S22024_Group4_ProjectContext())
+            {
+                BookCopy bc = ctx.BookCopies.Where(b => b.Isbn == isbn).FirstOrDefault();
+                StudentUsers user = ctx.StudentUserss.Where(s => s.Email == email).FirstOrDefault();
+                Borrow_Record borrowRecord = new Borrow_Record();
+                borrowRecord.Isbn = bc.Isbn;
+                borrowRecord.UserId= user.UserId;
+                borrowRecord.DateBorrowed = DateTime.Now;
+                borrowRecord.DueDate= dueDate;
+                borrowRecord.ReturnedDate= null;
+                borrowRecord.LateFee= lateFee;
+                borrowRecord.OutstandingFee= null;
+                borrowRecord.AmountPaid= null;
+                borrowRecord.IsActive= true;
+                bc.IsBorrowed = true;
+                ctx.Borrow_Records.Add(borrowRecord);
+
+                return new OkObjectResult(borrowRecord);
+            }
+
+        }
+        [FunctionName("AddBorrowRecordAI")]
+        public IActionResult abc([HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequest req)
+        {
+            _logger.LogInformation("C# HTTP trigger function processed a request.");
+
+            // Extract parameters from the query string
+            string isbn = req.Query["ISBN"];
+            string email = req.Query["Email"];
+            DateTime dueDate = DateTime.Parse(req.Query["DueDate"]);
+            decimal lateFee = decimal.Parse(req.Query["LateFee"]);
+
+            using (S22024_Group4_ProjectContext ctx = new S22024_Group4_ProjectContext())
+            {
+                // Get existing BookCopy and StudentUser
+                BookCopy bc = ctx.BookCopies.FirstOrDefault(b => b.Isbn == isbn);
+                StudentUsers user = ctx.StudentUserss.FirstOrDefault(s => s.Email == email);
+
+                if (bc == null || user == null)
+                {
+                    return new BadRequestObjectResult("Invalid ISBN or Email. The BookCopy or StudentUser does not exist.");
+                }
+
+                // Create a new BorrowRecord
+                Borrow_Record borrowRecord = new Borrow_Record
+                {
+                    Isbn = bc.Isbn,
+                    UserId = user.UserId,
+                    DateBorrowed = DateTime.Now,
+                    DueDate = dueDate,
+                    ReturnedDate = null,
+                    LateFee = lateFee,
+                    OutstandingFee = null,
+                    AmountPaid = null,
+                    IsActive = true
+                };
+
+                // Mark BookCopy as borrowed
+                bc.IsBorrowed = true;
+
+                // Add the BorrowRecord and save changes
+                ctx.Borrow_Records.Add(borrowRecord);
+                ctx.SaveChanges();
+
+                // Return the BorrowRecord DTO or custom shaped data
+                var result = new
+                {
+                    borrowRecord.RecordNumber,
+                    borrowRecord.Isbn,
+                    borrowRecord.UserId,
+                    borrowRecord.DateBorrowed,
+                    borrowRecord.DueDate,
+                    borrowRecord.LateFee
+                };
+
+                return new OkObjectResult(result);
+            }
+        }
+
     }
 }
