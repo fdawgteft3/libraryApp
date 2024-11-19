@@ -17,5 +17,5 @@ public partial class BookCopy
 
     public virtual Book Book { get; set; }
 
-    public virtual ICollection<BorrowRecord> BorrowRecords { get; set; } = new List<BorrowRecord>();
+    public virtual ICollection<Borrow_Record> Borrow_Records { get; set; } = new List<Borrow_Record>();
 }

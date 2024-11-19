@@ -16,6 +16,6 @@ public partial class StudentUser
     public string Password { get; set; }
 
     public string SelectedRoleIds { get; set; }
-
+    public virtual ICollection<Borrow_Record> Borrow_Records { get; set; }
     public virtual ICollection<IdentityRole> IdentityRoles { get; set; } = new List<IdentityRole>();
 }

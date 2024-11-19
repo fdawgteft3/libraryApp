@@ -35,19 +35,14 @@ public partial class S22024Group4ProjectContext : DbContext
 
     public virtual DbSet<BookInventory> BookInventories { get; set; }
 
-    public virtual DbSet<BorrowRecord> BorrowRecords { get; set; }
-
     public virtual DbSet<Category> Categories { get; set; }
 
     public virtual DbSet<IdentityRole> IdentityRoles { get; set; }
 
-    public virtual DbSet<Person> People { get; set; }
-
-    public virtual DbSet<Role> Roles { get; set; }
-
     public virtual DbSet<StudentUser> StudentUsers { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
+    public virtual DbSet<Borrow_Record> Borrow_Records { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
@@ -207,6 +202,37 @@ public partial class S22024Group4ProjectContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_BookCopy_Book");
         });
+        modelBuilder.Entity<Borrow_Record>(entity =>
+        {
+            entity.HasKey(e => e.RecordNumber);
+
+            entity.ToTable("Borrow_Record");
+
+            entity.Property(e => e.AmountPaid).HasColumnType("money");
+
+            entity.Property(e => e.DateBorrowed).HasColumnType("datetime");
+
+            entity.Property(e => e.DueDate).HasColumnType("datetime");
+
+            entity.HasOne(d => d.Copy)
+                .WithMany(p => p.Borrow_Records)
+                .HasForeignKey(d => d.Isbn)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Borrow_Record_BookCopy");
+
+            entity.Property(e => e.LateFee).HasColumnType("money");
+
+            entity.Property(e => e.OutstandingFee).HasColumnType("money");
+
+            entity.Property(e => e.ReturnedDate).HasColumnType("datetime");
+
+            entity.HasOne(d => d.User)
+                .WithMany(p => p.Borrow_Records)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Borrow_Record_StudentUsers");
+
+        });
 
         modelBuilder.Entity<BookInventory>(entity =>
         {
@@ -223,37 +249,7 @@ public partial class S22024Group4ProjectContext : DbContext
             entity.Property(e => e.Title).IsRequired();
         });
 
-        modelBuilder.Entity<BorrowRecord>(entity =>
-        {
-            entity.HasKey(e => e.RecordNumber).HasName("PK_BorrowRecordss");
-
-            entity.ToTable("BorrowRecord");
-
-            entity.HasIndex(e => e.Isbn, "IX_BorrowRecord_ISBN");
-
-            entity.HasIndex(e => e.MemberId, "IX_BorrowRecord_MemberId");
-
-            entity.Property(e => e.AmountPaid).HasColumnType("money");
-            entity.Property(e => e.DateBorrowed).HasColumnType("datetime");
-            entity.Property(e => e.DateReturned).HasColumnType("datetime");
-            entity.Property(e => e.DueDate).HasColumnType("datetime");
-            entity.Property(e => e.Isbn)
-                .IsRequired()
-                .HasMaxLength(100)
-                .HasColumnName("ISBN");
-            entity.Property(e => e.LateFee).HasColumnType("money");
-            entity.Property(e => e.OustandingFee).HasColumnType("money");
-
-            entity.HasOne(d => d.IsbnNavigation).WithMany(p => p.BorrowRecords)
-                .HasForeignKey(d => d.Isbn)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_BorrowRecord_BookCopy");
-
-            entity.HasOne(d => d.Member).WithMany(p => p.BorrowRecords)
-                .HasForeignKey(d => d.MemberId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_BorrowRecord_Person");
-        });
+        
 
         modelBuilder.Entity<Category>(entity =>
         {
@@ -274,49 +270,6 @@ public partial class S22024Group4ProjectContext : DbContext
             entity.HasOne(d => d.StudentUserUser).WithMany(p => p.IdentityRoles).HasForeignKey(d => d.StudentUserUserId);
         });
 
-        modelBuilder.Entity<Person>(entity =>
-        {
-            entity.HasKey(e => e.MemberId);
-
-            entity.ToTable("Person");
-
-            entity.HasIndex(e => e.RoleId, "IX_Person_RoleId");
-
-            entity.Property(e => e.Email)
-                .IsRequired()
-                .HasMaxLength(100);
-            entity.Property(e => e.Password)
-                .IsRequired()
-                .HasMaxLength(15);
-            entity.Property(e => e.PfirstName)
-                .IsRequired()
-                .HasMaxLength(20)
-                .HasColumnName("PFirstName");
-            entity.Property(e => e.Phone)
-                .IsRequired()
-                .HasMaxLength(15);
-            entity.Property(e => e.PlastName)
-                .IsRequired()
-                .HasMaxLength(20)
-                .HasColumnName("PLastName");
-            entity.Property(e => e.Username)
-                .IsRequired()
-                .HasMaxLength(15);
-
-            entity.HasOne(d => d.Role).WithMany(p => p.People)
-                .HasForeignKey(d => d.RoleId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Person_Role");
-        });
-
-        modelBuilder.Entity<Role>(entity =>
-        {
-            entity.ToTable("Role");
-
-            entity.Property(e => e.RoleName)
-                .IsRequired()
-                .HasMaxLength(15);
-        });
 
         modelBuilder.Entity<StudentUser>(entity =>
         {
