@@ -9,6 +9,7 @@ using LibraryApp.Models;
 using LibraryApp.Models.ViewModel;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace LibraryApp.Controllers
 {
@@ -262,6 +263,35 @@ namespace LibraryApp.Controllers
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> borrowBook(int id)
+        {
+            string baseURL = "http://localhost:7066/api/AddBorrowRecord";
+            //Get current users email
+            Console.WriteLine("Borrowing Book Id: "+ id);
+            var email = User.FindFirstValue(ClaimTypes.Email);
+            string queryParam = $"?BookId={id}&Email={email}";
+            HttpClient client = new HttpClient();
+            HttpResponseMessage response = await client.GetAsync($"{baseURL}{queryParam}");
+            if (!response.IsSuccessStatusCode)
+            {
+                string error = await response.Content.ReadAsStringAsync();
+                Console.WriteLine(error);
+                TempData["ErrorMessage"] = error;
+                return RedirectToAction("Index");
+
+            }
+
+            HttpContent content = response.Content;
+            string data = await content.ReadAsStringAsync();
+            Borrow_Record record = JsonConvert.DeserializeObject<Borrow_Record>(data);
+            if (record == null)
+            {
+                return NotFound();
+            }
+            return RedirectToAction("Index");
         }
 
         private bool BookExists(int id)

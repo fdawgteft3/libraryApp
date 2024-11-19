@@ -139,27 +139,27 @@ namespace LibraryFunctions
         public IActionResult abr([HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequest req)
         {
             // Extract parameters from the query string
-            string isbn = req.Query["ISBN"];
+            int id = int.Parse(req.Query["BookId"]);
             string email = req.Query["Email"];
-            DateTime dueDate = DateTime.Parse(req.Query["DueDate"]);
-            decimal lateFee = decimal.Parse(req.Query["LateFee"]);
+            DateTime dueDate = DateTime.Now.AddDays(14);
+            decimal lateFee = decimal.Parse("2.00");
 
             using (S22024Group4ProjectContext ctx = new S22024Group4ProjectContext())
             {
-                // Get existing BookCopy and StudentUser
-                BookCopy bc = ctx.BookCopies.FirstOrDefault(b => b.Isbn == isbn);
+                // Get BookCopy and StudentUser
+                BookCopy bc = ctx.BookCopies.FirstOrDefault(bc => bc.BookId == id && bc.IsBorrowed == false);
                 StudentUser user = ctx.StudentUsers.FirstOrDefault(s => s.Email == email);
 
                 if (bc == null)
                 {
-                    return new BadRequestObjectResult("Invalid ISBN. The BookCopy does not exist.");
+                    return new BadRequestObjectResult("Could not find an available copy of that title");
                 }
                 else if (bc.IsBorrowed == true)
                 {
                     return new BadRequestObjectResult("This copy of the book is already being borrowed.");
                 }else if(user == null)
                 {
-                    return new BadRequestObjectResult("This student does not exist.");
+                    return new BadRequestObjectResult($"This student does not exist. Email: {email}");
                 }
                 else
                 {

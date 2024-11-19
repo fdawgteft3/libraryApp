@@ -5,7 +5,10 @@
 }
 
 <h1>Books</h1>
-
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger" role="alert"> @TempData["ErrorMessage"] </div>
+}
 <p>
     <a asp-action="Create">Create New </a>
 </p>
@@ -38,7 +41,7 @@
                     <div class="col-md-4 mb-4">
                         <div class="card h-100">
                             <div class="card-body">
-                                <h5 class="card-title">@bookItem.Book.Title</h5>
+                                <h5 class="card-title">@bookItem.Book.BookId @bookItem.Book.Title</h5>
                                 @* <p class="card-text">@bookItem.Book.Description</p> *@
                                     @foreach (var author in bookItem.Authors)
                                     {
@@ -48,6 +51,7 @@
                             </div>
                             <div class="card-footer">
                                 <!-- Action Buttons -->
+                                <a asp-controller="Book" asp-action="borrowBook" asp-route-id="@bookItem.Book.BookId" class="btn btn-primary btn-sm">Borrow</a>
                                 <a asp-controller="Book" asp-action="Details" asp-route-id="@bookItem.Book.BookId" class="btn btn-primary btn-sm">Details</a>
                                 <a asp-controller="Book" asp-action="Edit" asp-route-id="@bookItem.Book.BookId" class="btn btn-success   btn-sm">Update</a>
                                 <a asp-controller="Book" asp-action="Delete" asp-route-id="@bookItem.Book.BookId" class="btn btn-danger btn-sm">Delete</a>
