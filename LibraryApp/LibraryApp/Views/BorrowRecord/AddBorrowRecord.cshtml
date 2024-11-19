@@ -1,0 +1,31 @@
+﻿@model LibraryApp.Models.Borrow_Record
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="text-center">
+    <h1 class="display-4">Add Borrow Record</h1>
+
+    <form asp-controller="BorrowRecord" asp-action="addBorrowRecordData" method="post">
+
+        <label hidden>Record Number</label>
+        <input hidden class="form-control" type="text" asp-for="RecordNumber" />
+
+        <label class="mt-4">ISBN</label>
+        <input class="form-control" type="text" placeholder="Enter" asp-for="Isbn" />
+
+        <label class="mt-4">User Email</label>
+        <input class="form-control" type="text" placeholder="Enter " asp-for="UserId" />
+
+        <label class="mt-4">Due Date</label>
+        <input class="form-control" type="datetime" placeholder="Enter " asp-for="DueDate" />
+
+        <label class="mt-4">Late Fee</label>
+        <input class="form-control" type="number" placeholder="0.00 " asp-for="LateFee" />
+
+        <button class="btn btn-primary mt-4" type="submit">ADD</button>
+
+    </form>
+
+</div>

@@ -35,6 +35,7 @@ public partial class S22024Group4ProjectContext : DbContext
     public virtual DbSet<Role> Roles { get; set; }
 
     public virtual DbSet<BookInventory> BookInventories { get; set; }
+    public virtual DbSet<Borrow_Record> Borrow_Records { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -95,6 +96,37 @@ public partial class S22024Group4ProjectContext : DbContext
                 .HasForeignKey(d => d.BookId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_BookCopy_Book");
+        });
+        modelBuilder.Entity<Borrow_Record>(entity =>
+        {
+            entity.HasKey(e => e.RecordNumber);
+
+            entity.ToTable("Borrow_Record");
+
+            entity.Property(e => e.AmountPaid).HasColumnType("money");
+
+            entity.Property(e => e.DateBorrowed).HasColumnType("datetime");
+
+            entity.Property(e => e.DueDate).HasColumnType("datetime");
+
+            entity.HasOne(d => d.Copy)
+                .WithMany(p => p.Borrow_Records)
+                .HasForeignKey(d => d.Isbn)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Borrow_Record_BookCopy");
+
+            entity.Property(e => e.LateFee).HasColumnType("money");
+
+            entity.Property(e => e.OutstandingFee).HasColumnType("money");
+
+            entity.Property(e => e.ReturnedDate).HasColumnType("datetime");
+
+            entity.HasOne(d => d.User)
+                .WithMany(p => p.Borrow_Records)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Borrow_Record_StudentUsers");
+
         });
 
         modelBuilder.Entity<BorrowRecord>(entity =>

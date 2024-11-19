@@ -120,7 +120,19 @@ namespace LibraryFunctions
                 }
             }
         }
-        [FunctionName("AddBorrowRecordAI")]
+        [FunctionName("ViewAllBorrowRecords")]
+        public IActionResult Run4([HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequest req)
+        {
+            
+            using (S22024Group4ProjectContext ctx = new S22024Group4ProjectContext())
+            {
+                // Get existing BorrowRecords according to UserId
+                List<Borrow_Record> records = ctx.Borrow_Records.ToList();
+
+                return new OkObjectResult(records);
+            }
+        }
+        [FunctionName("AddBorrowRecord")]
         public IActionResult abr([HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequest req)
         {
             // Extract parameters from the query string
@@ -184,7 +196,7 @@ namespace LibraryFunctions
             }
         }
         [FunctionName("FilterBorrowByStudent")]
-        public IActionResult Run4([HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequest req)
+        public IActionResult Run2([HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequest req)
         {
             // Extract parameters from the query string
             string userId = req.Query["UserId"];

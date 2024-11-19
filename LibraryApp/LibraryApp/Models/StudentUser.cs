@@ -8,5 +8,6 @@
         public string Email { get; set; }
         public string Password { get; set; }
         public string Role { get; set; }
+        public virtual ICollection<Borrow_Record> Borrow_Records { get; set; }
     }
 }
