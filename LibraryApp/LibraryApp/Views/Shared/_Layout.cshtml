@@ -30,15 +30,6 @@
                         <li class="nav-item">
                             <a class="nav-link text-light" asp-area="" asp-controller="Book" asp-action="Index">Book</a>
                         </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="BorrowRecord" asp-action="Index">Borrow Records</a>
-                        </li>
-
-
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Student" asp-action="AddStudent">Add Students</a>
-                        </li>
                         @if (User.IsInRole("Staff") || User.IsInRole("Admin"))
                         {
                             <div class="nav-item dropdown">
@@ -49,6 +40,7 @@
                                     <li> <a class="nav-link text-light" asp-area="" asp-controller="BookInventories" asp-action="getInventory">Inventory</a></li>
                                     <li> <a class="nav-link text-light" asp-area="" asp-controller="Author" asp-action="Index">Authors</a></li>
                                     <li> <a class="nav-link text-light" asp-area="" asp-controller="BookCopy" asp-action="Index">Book Copies</a></li>
+                                    <li><a class="nav-link text-light" asp-area="" asp-controller="BorrowRecord" asp-action="Index">Borrow Record</a></li>
                                 </ul>
                             </div>
                         }
@@ -69,6 +61,11 @@
                                     <li>
                                         <a class="nav-link text-light" asp-area="" asp-controller="Admin" asp-action="Users">
                                             <i class="fas fa-user-friends"></i> Manage Users
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link text-light" asp-area="" asp-controller="Student" asp-action="DisplayAllStudents">
+                                            <i class="fas fa-user-friends"></i>View Students
                                         </a>
                                     </li>
                                 </ul>
