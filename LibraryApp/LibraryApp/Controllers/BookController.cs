@@ -253,7 +253,11 @@ namespace LibraryApp.Controllers
             var book = await _context.Books.FindAsync(id);
             if (book != null)
             {
+                //Remove book
                 _context.Books.Remove(book);
+                //Remove book from bookAuthors
+                var previousAuthors = _context.BookAuthors.Where(ba => ba.BookId == id);
+                _context.BookAuthors.RemoveRange(previousAuthors);
             }
 
             await _context.SaveChangesAsync();

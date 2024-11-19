@@ -48,8 +48,9 @@
                             </div>
                             <div class="card-footer">
                                 <!-- Action Buttons -->
-                                <a asp-controller="Book" asp-action="Edit" asp-route-id="@bookItem.Book.BookId" class="btn btn-primary btn-sm">Edit</a>
                                 <a asp-controller="Book" asp-action="Details" asp-route-id="@bookItem.Book.BookId" class="btn btn-primary btn-sm">Details</a>
+                                <a asp-controller="Book" asp-action="Edit" asp-route-id="@bookItem.Book.BookId" class="btn btn-success btn-sm">Update</a>
+                                <a asp-controller="Book" asp-action="Delete" asp-route-id="@bookItem.Book.BookId" class="btn btn-danger btn-sm">Delete</a>
                             </div>
                         </div>
                     </div>
