@@ -53,7 +53,7 @@ namespace LibraryApp.Controllers
             return records;
         }
         [HttpPost]
-        public async Task<IActionResult> searchRecordsByStudent(StudentUser user)
+        public async Task<ActionResult> searchRecordsByStudent(StudentUser user)
         {
             string baseURL = "http://localhost:7066/api/FilterBorrowByStudent";
             string queryParameter = $"?Email={user.Email}";
@@ -65,7 +65,7 @@ namespace LibraryApp.Controllers
             return RedirectToAction("ViewBorrowSearchResult", records);
         }
         [HttpPost]
-        public async Task<IActionResult> searchRecordsByDateRange(DateTime startDate, DateTime endDate)
+        public async Task<ActionResult> searchRecordsByDateRange(DateTime startDate, DateTime endDate)
         {
             string baseURL = "http://localhost:7066/api/FilterBorrowByDateRange";
             string queryParameter = $"?StartDate={startDate}&EndDate={endDate}";
@@ -87,5 +87,6 @@ namespace LibraryApp.Controllers
             string data = await content.ReadAsStringAsync();
             return RedirectToAction("Index");
         }
+        
     }
 }

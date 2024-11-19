@@ -1,7 +1,10 @@
-﻿namespace LibraryApp.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace LibraryApp.Models
 {
     public class StudentUser
     {
+        [Key]
         public string UserId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
