@@ -73,6 +73,7 @@ namespace LibraryApp.Controllers
         }
 
         // GET: Book/Create
+        [Authorize(Roles = "Staff,Admin")]
         public IActionResult Create()
         {
             var bookAuthorModel = new BookAuthors
@@ -89,6 +90,7 @@ namespace LibraryApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Staff,Admin")]
         public async Task<IActionResult> Create([Bind("BookId,CategoryId,Title,Publisher,PublishYear,Description")] Book book)
         {
             if (ModelState.IsValid)
@@ -122,6 +124,7 @@ namespace LibraryApp.Controllers
         }
 
         // GET: Book/Edit/5
+        [Authorize(Roles = "Staff,Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             var categories = await _context.Categories.ToListAsync();
@@ -155,6 +158,7 @@ namespace LibraryApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Staff,Admin")]
         public async Task<IActionResult> Edit(int id, [Bind("BookId,CategoryId,Title,Publisher,PublishYear,Description")] Book book)
         {
             if (id != book.BookId)
@@ -228,6 +232,7 @@ namespace LibraryApp.Controllers
         }
 
         // GET: Book/Delete/5
+        [Authorize(Roles = "Staff,Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -249,6 +254,7 @@ namespace LibraryApp.Controllers
         // POST: Book/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Staff,Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var book = await _context.Books.FindAsync(id);
