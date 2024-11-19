@@ -1,4 +1,4 @@
-﻿@model LibraryApp.Models.Book
+﻿@model LibraryApp.Models.ViewModel.BookAuthors
 
 @{
     ViewData["Title"] = "Create";
@@ -15,34 +15,50 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             
             <div class="form-group">
-                <label asp-for="CategoryId" class="control-label"></label>
-                <select asp-for="CategoryId" class ="form-control" asp-items="ViewBag.CategoryId"></select>
+                <label asp-for="Book.CategoryId" class="control-label"></label>
+                <select asp-for="Book.CategoryId" class="form-control" asp-items="ViewBag.CategoryId"></select>
             </div>
             <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
+                <label asp-for="Book.Title" class="control-label"></label>
+                <input asp-for="Book.Title" class="form-control" />
+                <span asp-validation-for="Book.Title" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Publisher" class="control-label"></label>
-                <input asp-for="Publisher" class="form-control" />
-                <span asp-validation-for="Publisher" class="text-danger"></span>
+                <label asp-for="Book.Publisher" class="control-label"></label>
+                <input asp-for="Book.Publisher" class="form-control" />
+                <span asp-validation-for="Book.Publisher" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="PublishYear" class="control-label"></label>
-                <input asp-for="PublishYear" class="form-control" />
-                <span asp-validation-for="PublishYear" class="text-danger"></span>
+                <label asp-for="Book.PublishYear" class="control-label"></label>
+                <input asp-for="Book.PublishYear" class="form-control" />
+                <span asp-validation-for="Book.PublishYear" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
+                <label asp-for="Book.Description" class="control-label"></label>
+                <input asp-for="Book.Description" class="form-control" />
+                <span asp-validation-for="Book.Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label for="authorList">
+                    Authors
+                </label>
+                <select id="authorList" name="authorList" multiple class="form-control">
+                </select>
+                <button type="button" onclick="removeAuthor()">Remove Selected Author</button>
+                <input type="hidden" id="authorListHidden" name="authorList" />
             </div>
             <br />
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" onclick="selectAll()" value="Create" class="btn btn-primary" />
             </div>
         </form>
+        <form id="searchForm" action="/product/index" method="get">
+            <p>Add Author</p>
+            <input type="text" id="searchString" name="searchString" style="width:180px" onkeyup="AjaxRequest(this.value)" />
+            <div id="AutoSuggestContainer" style="position:absolute;display:none;z-index:100"></div>
+
+        </form>
+
     </div>
 </div>
 
@@ -51,5 +67,73 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        $.validator.setDefaults({
+            ignore: []
+        });
+
+        function selectAll() {
+            // Select all options in the authorList select element
+            jQuery('#authorList option').prop('selected', true);
+        }
+
+
+        function removeAuthor() {
+            var select = document.getElementById("authorList");
+            //get all selected authors
+            var selectedOptions = Array.from(select.selectedOptions);
+            //replicate them in the hidden input..
+            selectedOptions.forEach(function (option) {
+                var authorId = option.value;
+                var input = document.createElement("input");
+                input.type = "hidden";
+                input.name = "removedAuthors";
+                input.value = authorId;
+            });
+            //remove selected
+            selectedOptions.forEach(function (option) {
+                option.remove();
+            });
+        }
+
+        function AjaxRequest(searchString) {
+            if (searchString.length < 3) {
+                return
+            }
+            //alert("Testing search string= " + searchString);
+            var xmlhttp = new XMLHttpRequest();
+            var url = "/Book/IndexAjax?searchString=" + searchString;
+            xmlhttp.open("GET", url, false);
+            xmlhttp.send(); // Send the request to IndexAjax
+            // to clear the div for a fresh auto-suggest list
+            document.getElementById("AutoSuggestContainer").innerHTML = "";
+            document.getElementById("AutoSuggestContainer").style.display = "block";
+            // receive the reposne text
+            var response = JSON.parse(xmlhttp.responseText);
+            var suggestions = "";
+            for (var i = 0; i < response.length; i++) {
+                suggestions +=
+                    "<input type='button' value='" + response[i].FirstName + " " + response[i].LastName + "' " +
+                    "onclick=\"addAuthor(" + response[i].AuthorId + ", '" + response[i].FirstName + " " + response[i].LastName + "')\" " +
+                    "style='width:280px;' />";
+                suggestions += "<br/>";
+            }
+
+            document.getElementById("AutoSuggestContainer").innerHTML = suggestions;
+
+
+        }
+        function addAuthor(authorId, authorFullName) {
+            var select = document.getElementById("authorList");
+            var option = document.createElement("option");
+            option.value = authorId;
+            option.text = authorFullName;
+            select.add(option);
+            // Clear the auto-suggest container
+        document.getElementById("AutoSuggestContainer").style.display = "none";
+        document.getElementById("AutoSuggestContainer").innerHTML = ""; }
+    </script>
 }

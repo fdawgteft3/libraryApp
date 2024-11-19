@@ -74,6 +74,11 @@ namespace LibraryApp.Controllers
         // GET: Book/Create
         public IActionResult Create()
         {
+            var bookAuthorModel = new BookAuthors
+            {
+                Book = new Book(),
+                Authors = new List<Author>()
+            };
             ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryName");
             return View();
         }
@@ -87,7 +92,27 @@ namespace LibraryApp.Controllers
         {
             if (ModelState.IsValid)
             {
+                foreach (var key in HttpContext.Request.Form.Keys)
+                {
+                    Console.WriteLine($"Form Key: {key}, Value: {HttpContext.Request.Form[key]}");
+                }
                 _context.Add(book);
+                var rawSelectedAuthors = HttpContext.Request.Form["authorList"];
+                var selectedAuthors = rawSelectedAuthors.Where(a => !string.IsNullOrEmpty(a)).ToList();
+
+                await _context.SaveChangesAsync();
+                
+                foreach (var authorId in selectedAuthors)
+                {
+                    Console.WriteLine($"AuthorId: {authorId}");
+                    int authorIdInt = int.Parse(authorId);
+
+                    _context.BookAuthors.Add(new BookAuthor
+                    {
+                        BookId = book.BookId,
+                        AuthorId = authorIdInt
+                    });
+                }
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
