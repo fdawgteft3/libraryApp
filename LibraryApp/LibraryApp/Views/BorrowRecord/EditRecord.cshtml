@@ -1,0 +1,31 @@
+﻿@model LibraryApp.Models.Borrow_Record
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="text-center">
+    <h1 class="display-4">Edit Borrow Record</h1>
+
+    <form asp-controller="BorrowRecord" asp-action="updateRecordData" method="post">
+
+        <label hidden>Record Number</label>
+        <input hidden class="form-control" type="text" asp-for="RecordNumber" />
+
+        <label class="mt-4">Due Date</label>
+        <input class="form-control" type="datetime" placeholder="Enter Date in YYYY-MM-DD Format" asp-for="DueDate" />
+
+        <label class="mt-4">Outstaing Fee</label>
+        <input class="form-control" type="number" placeholder="Enter new amount " asp-for="OutstandingFee" />
+
+        <label class="mt-4">Amount Paid</label>
+        <input class="form-control" type="number" placeholder="Enter amount paid " asp-for="AmountPaid" />
+
+        <label class="mt-4">Active</label>
+        <input class="form-control" type="text" placeholder="Enter True or False " asp-for="IsActive" />
+
+        <button class="btn btn-primary mt-4" type="submit">Update</button>
+
+    </form>
+
+</div>

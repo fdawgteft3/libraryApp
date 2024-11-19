@@ -259,24 +259,29 @@ namespace LibraryFunctions
                 if(record.ReturnedDate == null && record.DueDate<DateTime.Now)
                 {
                     int daysLate = (DateTime.Now - record.DueDate).Days;
-                    record.OutstandingFee = daysLate * record.LateFee; // outstanding fee equals the late fee multiplied by number of days that it is late
-                    ctx.SaveChanges();
+                    if (daysLate >= 1)
+                    {
+                        record.OutstandingFee = daysLate * record.LateFee; // outstanding fee equals the late fee multiplied by number of days that it is late
+                        ctx.SaveChanges();
+                    }
+                    
                 }
 
-                return new OkObjectResult("");
+                return new OkObjectResult(record);
             }
         }
         [FunctionName("ReturnBook")]
         public IActionResult Run8([HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequest req)
         {
             // Extract parameters from the query string
-            int recordId = int.Parse(req.Query["RecordId"]);
+            string isbn = req.Query["ISBN"];
 
             using (S22024Group4ProjectContext ctx = new S22024Group4ProjectContext())
             {
                 // Get existing BorrowRecords according to UserId
-                Borrow_Record record = ctx.Borrow_Records.Where(b => b.RecordNumber == recordId).FirstOrDefault();
-                BookCopy bc = ctx.BookCopies.Where(b => b.Isbn == record.Isbn).FirstOrDefault();
+                BookCopy bc = ctx.BookCopies.Where(b => b.Isbn == isbn).FirstOrDefault();
+                Borrow_Record record = ctx.Borrow_Records.Where(b => b.Isbn == isbn && b.ReturnedDate==null).FirstOrDefault();
+                
                 record.ReturnedDate = DateTime.Now;
                 bc.IsBorrowed = false;
                 if(record.DueDate < record.ReturnedDate)
@@ -313,6 +318,38 @@ namespace LibraryFunctions
                 else
                 {
                     return new OkObjectResult("Sorry cannot find this Record");
+                }
+            }
+        }
+        [FunctionName("EditRecord")]
+        public static async Task<IActionResult> runner([HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequest req, ILogger log)
+        {
+            log.LogInformation("C# HTTP trigger function processed a request.");
+            //Get All Updated Input
+            int recordNumber = int.Parse(req.Query["RecordNumber"]);
+            DateTime dueDate = DateTime.Parse(req.Query["DueDate"]);
+            decimal outStandingFee = decimal.Parse(req.Query["OutStandingFee"]);
+            decimal amountPaid = decimal.Parse(req.Query["AmountPaid"]);
+            bool isActive = bool.Parse(req.Query["IsActive"]);
+
+            using (S22024Group4ProjectContext ctx = new S22024Group4ProjectContext())
+            {
+                Borrow_Record br = ctx.Borrow_Records.Where(b => b.RecordNumber == recordNumber).FirstOrDefault();
+                if (br == null)
+                {
+                    return new BadRequestObjectResult("Borrow Record was not found");
+                }else if (dueDate < DateTime.Now)
+                {
+                    return new BadRequestObjectResult("Due date cannot be updated to a past date.");
+                }
+                else
+                {
+                    br.DueDate = dueDate;
+                    br.OutstandingFee = outStandingFee;
+                    br.AmountPaid = amountPaid;
+                    br.IsActive = isActive;
+                    ctx.SaveChanges();
+                    return new OkObjectResult(br);
                 }
             }
         }

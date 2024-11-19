@@ -4,22 +4,24 @@
     ViewData["Title"] = "Search Page";
 }
 <div class="text-center">
-    <h1 class="display-4">Search Borrow Records</h1>
+    <h1 class="display-4">Search Borrow Records By Student</h1>
 
     <form asp-controller="BorrowRecord" asp-action="searchRecordsByStudent" method="post">
 
         <label>Student Email</label>
-        <input class="form-control" type="text" asp-for="Email" />
+        <input class="form-control" type="text" placeholder="abc@example.com" asp-for="Email" />
 
         <button class="btn btn-primary mt-4" type="submit">Search</button>
 
     </form>
+    <hr<h1 class="display-4">Search Borrow Records By Date Range</h1>
+
     <form asp-controller="BorrowRecord" asp-action="searchRecordsByDateRange" method="post">
 
         <label>Start Date</label>
-        <input class="form-control" type="datetime" asp-for="startDate" />
+        <input class="form-control" type="datetime" placeholder="Format YYYY-MM-DD" asp-for="startDate" />
         <label>End Date</label>
-        <input class="form-control" type="datetime" asp-for="endDate" />
+        <input class="form-control" type="datetime" placeholder="Format YYYY-MM-DD" asp-for="endDate" />
 
         <button class="btn btn-primary mt-4" type="submit">Search</button>
 

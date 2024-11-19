@@ -5,7 +5,9 @@
 <div class="text-center">
     <h1 class="display-4">View Records</h1>
     <p>
-        <a asp-action="Search">Search </a>
+        <a asp-action="Search">Search </a>|
+        <a asp-action="AddBorrowRecord">Create New </a>
+        
     </p>
 
     @model IEnumerable<LibraryApp.Models.Borrow_Record>
@@ -22,6 +24,7 @@
                 <th>Late Fee</th>
                 <th>Outstanding Fee</th>
                 <th>Amount Paid</th>
+                <th>Active</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -38,10 +41,48 @@
                     <td>@s.LateFee</td>
                     <td>@s.OutstandingFee</td>
                     <td>@s.AmountPaid</td>
+                    <td>@s.IsActive</td>
                     <td>
-                        @* <a asp-action="updateRecordData" asp-route-id="@s.UserId">Update</a>*@
-                        <a asp-action="deleteRecord" asp-route-id="@s.RecordNumber">Delete</a>  
 
+                        <form asp-action="EditRecord">
+                            <input type="hidden" name="RecordNumber" value="@s.RecordNumber" />
+                            <input type="hidden" name="UserId" value="@s.UserId" />
+                            <input type="hidden" name="Isbn" value="@s.Isbn" />
+                            <input type="hidden" name="DateBorrowed" value="@s.DateBorrowed" />
+                            <input type="hidden" name="DueDate" value="@s.DueDate" />
+                            <input type="hidden" name="ReturnedDate" value="@s.ReturnedDate" />
+                            <input type="hidden" name="LateFee" value="@s.LateFee" />
+                            <input type="hidden" name="OutstandingFee" value="@s.OutstandingFee" />
+                            <input type="hidden" name="AmountPaid" value="@s.AmountPaid" />
+                            <input type="hidden" name="IsActive" value="@s.IsActive" />
+                            <button type="submit" class="btn btn-link">Edit</button>
+                        </form>
+                        <form asp-action="updateFees" method="post">
+                            <input type="hidden" name="RecordNumber" value="@s.RecordNumber" />
+                            <input type="hidden" name="UserId" value="@s.UserId" />
+                            <input type="hidden" name="Isbn" value="@s.Isbn" />
+                            <input type="hidden" name="DateBorrowed" value="@s.DateBorrowed" />
+                            <input type="hidden" name="DueDate" value="@s.DueDate" />
+                            <input type="hidden" name="ReturnedDate" value="@s.ReturnedDate" />
+                            <input type="hidden" name="LateFee" value="@s.LateFee" />
+                            <input type="hidden" name="OutstandingFee" value="@s.OutstandingFee" />
+                            <input type="hidden" name="AmountPaid" value="@s.AmountPaid" />
+                            <input type="hidden" name="IsActive" value="@s.IsActive" />
+                            <button type="submit" class="btn btn-link">Refresh</button>
+                        </form>
+                        <form asp-action="deleteRecord" method="post">
+                            <input type="hidden" name="RecordNumber" value="@s.RecordNumber" />
+                            <input type="hidden" name="UserId" value="@s.UserId" />
+                            <input type="hidden" name="Isbn" value="@s.Isbn" />
+                            <input type="hidden" name="DateBorrowed" value="@s.DateBorrowed" />
+                            <input type="hidden" name="DueDate" value="@s.DueDate" />
+                            <input type="hidden" name="ReturnedDate" value="@s.ReturnedDate" />
+                            <input type="hidden" name="LateFee" value="@s.LateFee" />
+                            <input type="hidden" name="OutstandingFee" value="@s.OutstandingFee" />
+                            <input type="hidden" name="AmountPaid" value="@s.AmountPaid" />
+                            <input type="hidden" name="IsActive" value="@s.IsActive" />
+                            <button type="submit" class="btn btn-link">Delete</button>
+                        </form>
                     </td>
                 </tr>
             }
