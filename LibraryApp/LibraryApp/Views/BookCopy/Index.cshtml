@@ -1,0 +1,53 @@
+﻿@model IEnumerable<LibraryApp.Models.BookCopy>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.IsBorrowed)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Edition)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsActive)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Book)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsBorrowed)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Edition)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsActive)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Book.BookId)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.ISBN">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.ISBN">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.ISBN">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
