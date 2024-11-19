@@ -1,0 +1,51 @@
+﻿@{
+    ViewData["Title"] = "View Borrow Records Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">View Records</h1>
+    <p>
+        <a asp-action="Search">Search </a>
+    </p>
+
+    @model IEnumerable<LibraryApp.Models.Borrow_Record>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Record Number</th>
+                <th>User Id</th>
+                <th>ISBN</th>
+                <th>Date Borrowed</th>
+                <th>Due Date</th>
+                <th>Returned Date</th>
+                <th>Late Fee</th>
+                <th>Outstanding Fee</th>
+                <th>Amount Paid</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var s in Model)
+            {
+                <tr>
+                    <td>@s.RecordNumber</td>
+                    <td>@s.UserId</td>
+                    <td>@s.Isbn</td>
+                    <td>@s.DateBorrowed</td>
+                    <td>@s.DueDate</td>
+                    <td>@s.ReturnedDate</td>
+                    <td>@s.LateFee</td>
+                    <td>@s.OutstandingFee</td>
+                    <td>@s.AmountPaid</td>
+                    <td>
+                        @* <a asp-action="updateRecordData" asp-route-id="@s.UserId">Update</a>*@
+                        <a asp-action="deleteRecord" asp-route-id="@s.RecordNumber">Delete</a>  
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>

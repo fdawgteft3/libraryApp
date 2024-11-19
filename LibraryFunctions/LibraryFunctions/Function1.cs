@@ -18,6 +18,7 @@ namespace LibraryFunctions
 
     public class Function1
     {
+        //Student Azure Functions--------------------------------------------------------------------------
         [FunctionName("AddStudent")]
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
@@ -120,6 +121,8 @@ namespace LibraryFunctions
                 }
             }
         }
+
+        //BorrowRecord Azure Functions----------------------------------------------------------------------
         [FunctionName("ViewAllBorrowRecords")]
         public IActionResult Run4([HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequest req)
         {
@@ -128,7 +131,7 @@ namespace LibraryFunctions
             {
                 // Get existing BorrowRecords according to UserId
                 List<Borrow_Record> records = ctx.Borrow_Records.ToList();
-
+                
                 return new OkObjectResult(records);
             }
         }
@@ -196,15 +199,16 @@ namespace LibraryFunctions
             }
         }
         [FunctionName("FilterBorrowByStudent")]
-        public IActionResult Run2([HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequest req)
+        public IActionResult xyz([HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequest req)
         {
             // Extract parameters from the query string
-            string userId = req.Query["UserId"];
+            string email = req.Query["Email"];
 
             using (S22024Group4ProjectContext ctx = new S22024Group4ProjectContext())
             {
                 // Get existing BorrowRecords according to UserId
-                List<Borrow_Record> records = ctx.Borrow_Records.Where(b => b.UserId == userId).ToList();
+                StudentUser user = ctx.StudentUsers.Where(x=>x.Email==email).FirstOrDefault();
+                List<Borrow_Record> records = ctx.Borrow_Records.Where(b => b.UserId == user.UserId).ToList();
 
                 return new OkObjectResult(records);
             }
@@ -287,6 +291,29 @@ namespace LibraryFunctions
                 ctx.SaveChanges();
 
                 return new OkObjectResult(record);
+            }
+        }
+        [FunctionName("DeleteRecord")]
+        public static async Task<IActionResult> dr([HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequest req, ILogger log)
+        {
+            log.LogInformation("C# HTTP trigger function processed a request.");
+            int recordNumber = int.Parse(req.Query["RecordNumber"]);
+            //return new OkObjectResult("Ssortry cant find product" + pID);
+
+            using (S22024Group4ProjectContext ctx = new S22024Group4ProjectContext())
+            {
+                Borrow_Record br = ctx.Borrow_Records.Where(x => x.RecordNumber == recordNumber).FirstOrDefault();
+                
+                if (br != null)
+                {
+                    br.IsActive = false;
+                    ctx.SaveChanges();
+                    return new OkObjectResult("Made Record Inactive");
+                }
+                else
+                {
+                    return new OkObjectResult("Sorry cannot find this Record");
+                }
             }
         }
     }

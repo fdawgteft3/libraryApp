@@ -18,5 +18,7 @@ namespace LibraryApp.Models
         public virtual StudentUser User { get; set; }
         [JsonIgnore]
         public virtual BookCopy Copy { get; set; }
+        
+        
     }
 }
