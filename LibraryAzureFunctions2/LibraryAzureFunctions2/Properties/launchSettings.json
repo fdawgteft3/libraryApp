@@ -1,9 +1,0 @@
-{
-  "profiles": {
-    "LibraryAzureFunctions2": {
-      "commandName": "Project",
-      "commandLineArgs": "--port 7242",
-      "launchBrowser": false
-    }
-  }
-}
