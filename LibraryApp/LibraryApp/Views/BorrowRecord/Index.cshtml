@@ -1,4 +1,9 @@
-﻿@{
+﻿@model IPagedList<LibraryApp.Models.Borrow_Record>
+@using X.PagedList;
+@using X.PagedList.Mvc.Core;
+
+
+@{
     ViewData["Title"] = "View Borrow Records Page";
 }
 <h4>THIS IS A STUDENT PROJECT</h4>
@@ -10,8 +15,6 @@
         <a asp-action="AddBorrowRecord">Create New </a>
         
     </p>
-
-    @model IEnumerable<LibraryApp.Models.Borrow_Record>
 
     <table class="table">
         <thead>
@@ -73,3 +76,10 @@
     </table>
 
 </div>
+@Html.PagedListPager(Model, page => Url.Action("Index",
+            new { page = page }),
+            new PagedListRenderOptions
+        {
+            LiElementClasses = new string[] { "page-item" },
+            PageClasses = new string[] { "page-link" }
+        })

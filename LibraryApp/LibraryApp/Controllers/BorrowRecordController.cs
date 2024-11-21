@@ -3,6 +3,8 @@ using LibraryApp.Models;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using X.PagedList;
+using X.PagedList.Extensions;
 
 namespace LibraryApp.Controllers
 {
@@ -15,11 +17,12 @@ namespace LibraryApp.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? page)
         {
+            var pageNumber = page ?? 1;
             List<Borrow_Record> items = await viewAllBorrowRecordData();
 
-            return View(items);
+            return View(items.ToPagedList(pageNumber, 5));
         }
         public IActionResult AddBorrowRecord()
         {

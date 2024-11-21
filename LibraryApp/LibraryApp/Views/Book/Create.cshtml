@@ -36,7 +36,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="Book.Description" class="control-label"></label>
-                <input asp-for="Book.Description" class="form-control" />
+                <textarea asp-for="Book.Description" class="form-control"></textarea>
                 <span asp-validation-for="Book.Description" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -71,6 +71,7 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    <script src="https://cdn.tiny.cloud/1/4ap6905ebgkfyi661mw4l2h0u2jomlq49ib4unvj3e1u228t/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
     <script>
         $.validator.setDefaults({
             ignore: []
@@ -136,5 +137,21 @@
             // Clear the auto-suggest container
         document.getElementById("AutoSuggestContainer").style.display = "none";
         document.getElementById("AutoSuggestContainer").innerHTML = ""; }
+        //Tiny MCE Implementation for the Description of Book
+        tinymce.init({
+            selector: 'textarea',
+            width: 600,
+            plugins: [
+                // Core editing features
+                'anchor', 'autolink', 'charmap', 'codesample', 'emoticons', 'image', 'link', 'lists', 'media', 'searchreplace', 'table', 'visualblocks', 'wordcount'
+  
+                
+            ],
+            toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
+            tinycomments_mode: 'embedded'
+
+            
+        });
     </script>
+    
 }
