@@ -15,7 +15,6 @@
         <thead>
             <tr>
                 <th>Record Number</th>
-                <th>User Id</th>
                 <th>ISBN</th>
                 <th>Date Borrowed</th>
                 <th>Due Date</th>
@@ -31,7 +30,6 @@
             {
                 <tr>
                     <td>@s.RecordNumber</td>
-                    <td>@s.UserId</td>
                     <td>@s.Isbn</td>
                     <td>@s.DateBorrowed</td>
                     <td>@s.DueDate</td>
@@ -40,8 +38,16 @@
                     <td>@s.OutstandingFee</td>
                     <td>@s.AmountPaid</td>
                     <td>
-                        @* <a asp-action="updateRecordData" asp-route-id="@s.UserId">Update</a>
-                    <a asp-action="deleteRecord" asp-route-id="@s.RecordNumber">Delete</a>  *@
+                        @if (s.DueDate < DateTime.Now)
+                        {
+                            <a asp-action="">Pay</a>
+                            if (s.ReturnedDate == null)
+                            {
+                                <a asp-action="returnBook" asp-route-id="@s.Isbn">Return</a>
+                                 
+                            }
+                        }
+                        
 
                     </td>
                 </tr>

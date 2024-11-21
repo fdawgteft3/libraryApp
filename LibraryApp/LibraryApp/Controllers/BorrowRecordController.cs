@@ -71,7 +71,7 @@ namespace LibraryApp.Controllers
             HttpContent content = response.Content;
             string data = await content.ReadAsStringAsync();
             List<Borrow_Record> records = JsonConvert.DeserializeObject<List<Borrow_Record>>(data);
-            return RedirectToAction("ViewBorrowSearchResult", records);
+            return View("ViewBorrowSearchResult", records);
         }
         [HttpPost]
         public async Task<ActionResult> searchRecordsByDateRange(DateTime startDate, DateTime endDate)
@@ -83,7 +83,7 @@ namespace LibraryApp.Controllers
             HttpContent content = response.Content;
             string data = await content.ReadAsStringAsync();
             List<Borrow_Record> records = JsonConvert.DeserializeObject<List<Borrow_Record>>(data);
-            return RedirectToAction("ViewBorrowSearchResult", records);
+            return View("ViewBorrowSearchResult", records);
         }
         [HttpPost]
         public async Task<IActionResult> deleteRecord(Borrow_Record br)
