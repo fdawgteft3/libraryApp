@@ -22,7 +22,8 @@
                 <th>Late Fee</th>
                 <th>Outstanding Fee</th>
                 <th>Amount Paid</th>
-                <th>Actions</th>
+
+                
             </tr>
         </thead>
         <tbody>
@@ -37,19 +38,7 @@
                     <td>@s.LateFee</td>
                     <td>@s.OutstandingFee</td>
                     <td>@s.AmountPaid</td>
-                    <td>
-                        @if (s.DueDate < DateTime.Now)
-                        {
-                            <a asp-action="">Pay</a>
-                            if (s.ReturnedDate == null)
-                            {
-                                <a asp-action="returnBook" asp-route-id="@s.Isbn">Return</a>
-                                 
-                            }
-                        }
-                        
-
-                    </td>
+                    
                 </tr>
             }
         </tbody>
