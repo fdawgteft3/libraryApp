@@ -60,28 +60,10 @@
                         </form>
                         <form asp-action="updateFees" method="post">
                             <input type="hidden" name="RecordNumber" value="@s.RecordNumber" />
-                            <input type="hidden" name="UserId" value="@s.UserId" />
-                            <input type="hidden" name="Isbn" value="@s.Isbn" />
-                            <input type="hidden" name="DateBorrowed" value="@s.DateBorrowed" />
-                            <input type="hidden" name="DueDate" value="@s.DueDate" />
-                            <input type="hidden" name="ReturnedDate" value="@s.ReturnedDate" />
-                            <input type="hidden" name="LateFee" value="@s.LateFee" />
-                            <input type="hidden" name="OutstandingFee" value="@s.OutstandingFee" />
-                            <input type="hidden" name="AmountPaid" value="@s.AmountPaid" />
-                            <input type="hidden" name="IsActive" value="@s.IsActive" />
                             <button type="submit" class="btn btn-link">Refresh</button>
                         </form>
                         <form asp-action="deleteRecord" method="post">
                             <input type="hidden" name="RecordNumber" value="@s.RecordNumber" />
-                            <input type="hidden" name="UserId" value="@s.UserId" />
-                            <input type="hidden" name="Isbn" value="@s.Isbn" />
-                            <input type="hidden" name="DateBorrowed" value="@s.DateBorrowed" />
-                            <input type="hidden" name="DueDate" value="@s.DueDate" />
-                            <input type="hidden" name="ReturnedDate" value="@s.ReturnedDate" />
-                            <input type="hidden" name="LateFee" value="@s.LateFee" />
-                            <input type="hidden" name="OutstandingFee" value="@s.OutstandingFee" />
-                            <input type="hidden" name="AmountPaid" value="@s.AmountPaid" />
-                            <input type="hidden" name="IsActive" value="@s.IsActive" />
                             <button type="submit" class="btn btn-link">Delete</button>
                         </form>
                     </td>
