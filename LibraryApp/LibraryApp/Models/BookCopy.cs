@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace LibraryApp.Models;
 
@@ -17,6 +15,7 @@ public partial class BookCopy
     public bool IsActive { get; set; }
 
     public virtual Book Book { get; set; } = null!;
+
 
     public virtual ICollection<Borrow_Record> Borrow_Records { get; set; } = new List<Borrow_Record>();
 }

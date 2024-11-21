@@ -9,6 +9,8 @@ namespace LibraryApp.Models;
 
 public partial class S22024Group4ProjectContext : DbContext
 {
+    
+
     public S22024Group4ProjectContext()
     {
     }

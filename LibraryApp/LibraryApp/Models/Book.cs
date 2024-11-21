@@ -24,4 +24,5 @@ public partial class Book
     public virtual ICollection<BookCopy> BookCopies { get; set; } = new List<BookCopy>();
 
     public virtual Category? Category { get; set; }
+
 }
