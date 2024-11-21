@@ -21,6 +21,13 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
 
+builder.Services.AddDistributedMemoryCache(); // Required for session storage
+builder.Services.AddSession(options =>
+{
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
 //Added Google Authentication
 builder.Services.AddAuthentication().AddGoogle(googleOptions =>
 {
@@ -42,6 +49,8 @@ else
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseSession(); //Added to enable the session
 
 app.UseAuthorization();
 

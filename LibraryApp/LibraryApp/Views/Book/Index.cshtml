@@ -46,7 +46,7 @@
                     <div class="col-md-4 mb-4">
                         <div class="card h-100">
                             <div class="card-body">
-                                <h5 class="card-title">@bookItem.Book.BookId @bookItem.Book.Title</h5>
+                                <h5 class="card-title">@bookItem.Book.Title</h5>
                                 @* <p class="card-text">@bookItem.Book.Description</p> *@
                                     @foreach (var author in bookItem.Authors)
                                     {
@@ -58,6 +58,8 @@
                                 <!-- Action Buttons -->
                                
                                 <a asp-controller="Book" asp-action="borrowBook" asp-route-id="@bookItem.Book.BookId" class="btn btn-primary btn-sm">Borrow</a>
+
+                                <a asp-controller="PaymentCart" asp-action="AddToCart" asp-route-id="@bookItem.Book.BookId" class="btn btn-primary btn-sm">Add To Cart</a>
                                 <a asp-controller="Book" asp-action="Details" asp-route-id="@bookItem.Book.BookId" class="btn btn-primary btn-sm">Details</a>
                                 @if (User.IsInRole("Staff") || User.IsInRole("Admin"))
                                 {

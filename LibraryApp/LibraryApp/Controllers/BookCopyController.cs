@@ -159,16 +159,17 @@ namespace LibraryApp.Controllers
         {
             return _context.BookCopies.Any(e => e.ISBN == id);
         }
-        [HttpPost]
-        public async Task<IActionResult> returnBook(Borrow_Record br)
+        [HttpGet]
+        public async Task<ActionResult> returnBook(string id)
         {
             string baseURL = "http://localhost:7066/api/ReturnBook";
-            string queryParameter = $"?ISBN={br.RecordNumber}";
+            string queryParameter = $"?ISBN={id}";
+            Console.WriteLine("isbn: " + id);
             HttpClient client = new HttpClient();
             HttpResponseMessage response = await client.GetAsync($"{baseURL}{queryParameter}");
             HttpContent content = response.Content;
             string data = await content.ReadAsStringAsync();
-            return RedirectToAction("Details");
+            return RedirectToAction("Index");
         }
     }
 }
