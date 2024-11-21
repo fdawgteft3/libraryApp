@@ -276,11 +276,11 @@ namespace LibraryFunctions
             }
         }
         [FunctionName("ReturnBook")]//function to set Book Copy object to available to borrow
-        public IActionResult Run8([HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequest req)
+        public IActionResult Run8([HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequest req, ILogger log)
         {
             // Extract parameters from the query string
             string isbn = req.Query["ISBN"];
-
+            //log.LogInformation("isbn:"+isbn);
             //Use database context to find specified book copy object
             using (S22024Group4ProjectContext ctx = new S22024Group4ProjectContext())
             {

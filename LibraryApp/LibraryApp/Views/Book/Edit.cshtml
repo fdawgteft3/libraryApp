@@ -17,7 +17,7 @@
             <input type="hidden" asp-for="Book.BookId" />
             
             <div class="form-group">
-                <label asp-for="Book.CategoryId" class="control-label"></label>
+                <label asp-for="Book.CategoryId" class="control-label">Category</label>
                 <select asp-for="Book.CategoryId" class="form-control" asp-items="ViewBag.CategoryId"></select>
                 <span asp-validation-for="Book.CategoryId" class="text-danger"></span>
             </div>
